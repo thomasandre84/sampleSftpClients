@@ -121,6 +121,7 @@ class JCraftTest {
                     Files.delete(p);
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
         }));
     }
