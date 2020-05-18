@@ -117,6 +117,7 @@ class JCraftTest {
             try {
                 File f = p.toFile();
                 if (f.isFile()) {
+                    System.out.println("Deleting File: "+ f.getName() + " with size: "+ f.length() / 1024 + " kb");
                     Files.delete(p);
                 }
             } catch (IOException e) {
