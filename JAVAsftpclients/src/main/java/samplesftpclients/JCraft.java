@@ -2,6 +2,7 @@ package samplesftpclients;
 
 import com.jcraft.jsch.*;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -82,7 +83,10 @@ public final class JCraft {
         try {
             String curdir = channelSftp.pwd();
             Vector<ChannelSftp.LsEntry> dirv = channelSftp.ls(curdir);
-            dirv.forEach(p -> dir.add(p.getFilename()));
+            dirv.forEach(p -> {
+                if (!p.getFilename().startsWith("."))
+                    dir.add(p.getFilename());
+            });
         } catch (SftpException e) {
             e.printStackTrace();
         }
@@ -99,7 +103,10 @@ public final class JCraft {
         List<String> dir = new ArrayList<>();
         try {
             Vector<ChannelSftp.LsEntry> dirv = channelSftp.ls(remoteFolder);
-            dirv.forEach(p -> dir.add(remoteFolder + "/" + p.getFilename()));
+            dirv.forEach(p -> {
+                if (!p.getFilename().startsWith("."))
+                    dir.add(remoteFolder + "/" + p.getFilename());
+            });
         } catch (SftpException e) {
             e.printStackTrace();
         }
