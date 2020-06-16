@@ -4,7 +4,8 @@ import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -13,7 +14,7 @@ import java.util.Vector;
 /**
  * An example wrapper class for JCraft.
  */
-public final class JCraft {
+public final class JCraft implements Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JCraft.class);
 
@@ -219,4 +220,8 @@ public final class JCraft {
 
     }
 
+    @Override
+    public void close() throws IOException {
+        disconnect();
+    }
 }

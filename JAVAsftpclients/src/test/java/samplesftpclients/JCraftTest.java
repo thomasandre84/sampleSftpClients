@@ -1,6 +1,9 @@
 package samplesftpclients;
 
 import org.junit.jupiter.api.*;
+import samplesftpclients.util.EnvConfig;
+import samplesftpclients.util.LocalFilesUtil;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,16 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class JCraftTest {
 
     static JCraft jCraft;
-    private static String username = System.getenv("SFTP_USERNAME");
-    private static String password = System.getenv("SFTP_PASSWORD");
-    private static String host = System.getenv("SFTP_HOST");
-    private static int port = Integer.parseInt(System.getenv("SFTP_PORT"));
-    private static String remoteDir = System.getenv("SFTP_REMOTE_DIR");
-    private static String localDir = System.getenv("LOCAL_DIR");
+
 
     @BeforeAll
     void setUp() {
-        jCraft = new JCraft(username, password, host, port);
+        jCraft = new JCraft(EnvConfig.USERNAME, EnvConfig.PASSWORD, EnvConfig.HOST, EnvConfig.PORT);
     }
 
     @AfterAll
@@ -38,8 +36,8 @@ class JCraftTest {
     @Test
     @Order(2)
     void changeRemoteDir() throws Exception {
-        jCraft.changeRemoteDir(remoteDir);
-        assertEquals(remoteDir, jCraft.channelSftp.pwd());
+        jCraft.changeRemoteDir(EnvConfig.REMOTE_DIR);
+        assertEquals(EnvConfig.REMOTE_DIR, jCraft.channelSftp.pwd());
     }
 
     @Test
@@ -53,40 +51,40 @@ class JCraftTest {
     @Test
     @Order(4)
     void listRemoteDir() {
-        List<String> files = jCraft.listRemoteDir(remoteDir);
+        List<String> files = jCraft.listRemoteDir(EnvConfig.REMOTE_DIR);
         assertFalse(files.isEmpty());
-        files.forEach(f -> assertTrue(f.startsWith(remoteDir)));
+        files.forEach(f -> assertTrue(f.startsWith(EnvConfig.REMOTE_DIR)));
     }
 
     @Test
     @Order(5)
     void downloadAllFilesCurrentRemoteDir() throws Exception {
-        jCraft.changeLocalDir(localDir);
+        jCraft.changeLocalDir(EnvConfig.LOCAL_DIR);
         jCraft.downloadAllFilesCurrentRemoteDir();
 
         List<String> files = jCraft.listCurrentRemoteDir();
-        List<String> localFiles = LocalFilesUtil.getLocalFiles(localDir);
+        List<String> localFiles = LocalFilesUtil.getLocalFiles(EnvConfig.LOCAL_DIR);
         // Every remote file is in the local files - expecting, nothing has changed during download
         files.forEach(f -> assertTrue(localFiles.contains(f)));
 
         // cleanup
-        LocalFilesUtil.deleteLocalFiles(localDir);
+        LocalFilesUtil.deleteLocalFiles(EnvConfig.LOCAL_DIR);
     }
 
     @Test
     @Order(6)
     void downloadAllFilesRemoteDir() throws Exception {
         jCraft.changeRemoteDir("/"); // let's get to the root
-        jCraft.downloadAllFilesRemoteDir(remoteDir);
+        jCraft.downloadAllFilesRemoteDir(EnvConfig.REMOTE_DIR);
         
-        List<String> files = jCraft.listRemoteDir(remoteDir); // Here they have FQN
-        List<String> localFiles = LocalFilesUtil.getLocalFiles(localDir);
+        List<String> files = jCraft.listRemoteDir(EnvConfig.REMOTE_DIR); // Here they have FQN
+        List<String> localFiles = LocalFilesUtil.getLocalFiles(EnvConfig.LOCAL_DIR);
         List<String> fileNames = LocalFilesUtil.getFileNames(files);
         // Every remote file is in the local files - expecting, nothing has changed during download
         fileNames.forEach(f -> assertTrue(localFiles.contains(f)));
 
         // cleanup
-        LocalFilesUtil.deleteLocalFiles(localDir);
+        LocalFilesUtil.deleteLocalFiles(EnvConfig.LOCAL_DIR);
     }
 
 
