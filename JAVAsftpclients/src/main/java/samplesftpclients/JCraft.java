@@ -1,6 +1,8 @@
 package samplesftpclients;
 
 import com.jcraft.jsch.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.Vector;
  * An example wrapper class for JCraft.
  */
 public final class JCraft {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JCraft.class);
 
     private static final String CHANNEL = "sftp";
 
@@ -44,6 +48,7 @@ public final class JCraft {
      * Connect to the SFTP Server.
      */
     public void connect() {
+        LOGGER.info("Connecting to the SFTP-Server: {}", host);
         jsch = new JSch();
         try {
             session = jsch.getSession(username, host, port);
@@ -55,8 +60,9 @@ public final class JCraft {
             channel = session.openChannel(CHANNEL);
             channel.connect();
             channelSftp = (ChannelSftp) channel;
+            LOGGER.info("Successfully logger in");
         } catch (JSchException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot Login: {}", e);
         }
     }
 
@@ -67,9 +73,11 @@ public final class JCraft {
      */
     public void changeRemoteDir(String folder) {
         try {
+            LOGGER.debug("Changing folder to: {}", folder);
             channelSftp.cd(folder);
+            LOGGER.debug("Successfully Changed folder to: {}", folder);
         } catch (SftpException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot Change Folder {}", e);
         }
     }
 
@@ -81,14 +89,16 @@ public final class JCraft {
     public List<String> listCurrentRemoteDir() {
         List<String> dir = new ArrayList<>();
         try {
+            LOGGER.debug("Listing current Directory");
             String curdir = channelSftp.pwd();
             Vector<ChannelSftp.LsEntry> dirv = channelSftp.ls(curdir);
+            LOGGER.debug("Listed current Directory: {}", curdir);
             dirv.forEach(p -> {
                 if (!p.getFilename().startsWith("."))
                     dir.add(p.getFilename());
             });
         } catch (SftpException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot List Current Directory: {}", e);
         }
         return dir;
     }
@@ -102,13 +112,15 @@ public final class JCraft {
     public List<String> listRemoteDir(String remoteFolder) {
         List<String> dir = new ArrayList<>();
         try {
+            LOGGER.debug("Listing remote Directory: {}", remoteFolder);
             Vector<ChannelSftp.LsEntry> dirv = channelSftp.ls(remoteFolder);
+            LOGGER.debug("Listed remote Directory: {}", remoteFolder);
             dirv.forEach(p -> {
                 if (!p.getFilename().startsWith("."))
                     dir.add(remoteFolder + "/" + p.getFilename());
             });
         } catch (SftpException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot List Remote Directory: {}", e);
         }
         return dir;
     }
@@ -119,9 +131,11 @@ public final class JCraft {
      */
     public void downloadAllFilesCurrentRemoteDir() {
         List<String> files = listCurrentRemoteDir();
+        LOGGER.info("Staring to Download the following files: {}", files);
         files.forEach(f -> {
             downloadFile(f);
         });
+        LOGGER.info("Download finished for files: {}", files);
     }
 
     /**
@@ -130,10 +144,12 @@ public final class JCraft {
      */
     public void downloadAllFilesRemoteDir(String remoteDir) {
         List<String> files = listRemoteDir(remoteDir);
+        LOGGER.info("Staring to Download the following files: {}", files);
         files.forEach(f -> {
                 String[] dstFile = f.split("/"); // Here is the magic
                 downloadFile(f, dstFile[dstFile.length-1]);
         });
+        LOGGER.info("Download finished for files: {}", files);
     }
 
     /**
@@ -144,9 +160,11 @@ public final class JCraft {
      */
     public void downloadFile(String fileName){
         try {
+            LOGGER.info("Download file: {}", fileName);
             channelSftp.get(fileName, fileName);
+            LOGGER.info("Download finished for file: {}", fileName);
         } catch (SftpException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot Download file: {}", e);
         }
     }
 
@@ -157,9 +175,11 @@ public final class JCraft {
      */
     public void downloadFile(String fileName, String localName){
         try {
+            LOGGER.info("Download file: {}", fileName);
             channelSftp.get(fileName, localName);
+            LOGGER.info("Download finished for file: {}", fileName);
         } catch (SftpException e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot Download file: {}", e);
         }
     }
 
@@ -172,9 +192,11 @@ public final class JCraft {
     }
 
     public void disconnect() {
+        LOGGER.info("Starting to logout");
         channelSftp.exit();
         channel.disconnect();
         session.disconnect();
+        LOGGER.info("Logout done");
     }
 
 
