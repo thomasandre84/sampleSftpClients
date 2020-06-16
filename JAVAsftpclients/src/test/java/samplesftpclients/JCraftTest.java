@@ -1,13 +1,6 @@
 package samplesftpclients;
 
 import org.junit.jupiter.api.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,11 +65,12 @@ class JCraftTest {
         jCraft.downloadAllFilesCurrentRemoteDir();
 
         List<String> files = jCraft.listCurrentRemoteDir();
-        List<String> localFiles = getLocalFiles();
+        List<String> localFiles = LocalFilesUtil.getLocalFiles(localDir);
         // Every remote file is in the local files - expecting, nothing has changed during download
         files.forEach(f -> assertTrue(localFiles.contains(f)));
+
         // cleanup
-        deleteLocalFiles();
+        LocalFilesUtil.deleteLocalFiles(localDir);
     }
 
     @Test
@@ -86,50 +80,14 @@ class JCraftTest {
         jCraft.downloadAllFilesRemoteDir(remoteDir);
         
         List<String> files = jCraft.listRemoteDir(remoteDir); // Here they have FQN
-        List<String> localFiles = getLocalFiles();
-        List<String> fileNames = getFileNames(files);
+        List<String> localFiles = LocalFilesUtil.getLocalFiles(localDir);
+        List<String> fileNames = LocalFilesUtil.getFileNames(files);
         // Every remote file is in the local files - expecting, nothing has changed during download
         fileNames.forEach(f -> assertTrue(localFiles.contains(f)));
 
         // cleanup
-        deleteLocalFiles();
+        LocalFilesUtil.deleteLocalFiles(localDir);
     }
 
-    private static List<String> getLocalFiles() throws Exception {
-        Path path = FileSystems.getDefault().getPath(localDir);
-        List<String> localFiles = new ArrayList<>();
 
-        Files.walk(path).forEach(p -> {
-            if (!p.toString().equals(localDir)){
-                String[] pathes = p.toString().split("/");
-                if (pathes.length > 0)
-                    localFiles.add(pathes[pathes.length -1]);
-            }
-        });
-        return localFiles;
-    }
-
-    private static void deleteLocalFiles() throws Exception {
-        Path path = FileSystems.getDefault().getPath(localDir+"/");
-        Files.walk(path).sorted((a, b) -> b.compareTo(a)).forEach((p -> {
-            try {
-                File f = p.toFile();
-                if (f.isFile()) {
-                    System.out.println("Deleting File: "+ f.getName() + " with size: "+ f.length() / 1024 + " kb");
-                    Files.delete(p);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
-    }
-
-    private static List<String> getFileNames(List<String> files) {
-        List<String> fileNames = new ArrayList<>();
-        for (String fqn : files){
-            String[] tmp = fqn.split("/");
-            fileNames.add(tmp[tmp.length-1]);
-        }
-        return fileNames;
-    }
 }
