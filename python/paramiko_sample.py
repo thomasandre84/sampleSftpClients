@@ -10,9 +10,10 @@ class SftpClient:
     '''
     Simple SFTP Client with Python Paramiko
     '''
-    def __init__(self, host_key_policy=paramiko.AutoAddPolicy):
+
+    def __init__(self):
         self.client = paramiko.SSHClient()
-        self.client.set_missing_host_key_policy(host_key_policy)
+        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
         self.sftp = None
 
     def connect(self, host, port, user, password, timeout=10.0):
