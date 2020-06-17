@@ -61,7 +61,7 @@ public final class JCraft implements Closeable {
             channel = session.openChannel(CHANNEL);
             channel.connect();
             channelSftp = (ChannelSftp) channel;
-            LOGGER.info("Successfully logger in");
+            LOGGER.info("Successfully logged in");
         } catch (JSchException e) {
             LOGGER.error("Cannot Login: {}", e);
         }
@@ -200,25 +200,6 @@ public final class JCraft implements Closeable {
         LOGGER.info("Logout done");
     }
 
-
-    public static void main(String[] args) {
-        if (args.length < 4){
-            System.out.println("Provide the required args, username, password, host and port");
-        }
-
-        JCraft jCraft = new JCraft(args[0], args[1], args[2], Integer.parseInt(args[3]));
-        jCraft.connect();
-        //jCraft.changeLocalDir("/tmp"); // only required if target is without path
-        List<String> files = jCraft.listRemoteDir("/vdfs-delivery/tkadt/DATA"); // Not good
-        files.forEach(System.out::println);
-        files.forEach(f -> jCraft.downloadFile(f, "/tmp/test3"));  // Works when the dest filename is named
-        jCraft.changeRemoteDir("/vdfs-delivery/tkadt/DATA");
-        // and get the filename, without
-        //files.forEach(f -> jCraft.downloadFile("/tmp", f, "test"));
-
-        jCraft.disconnect();
-
-    }
 
     @Override
     public void close() throws IOException {

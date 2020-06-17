@@ -11,6 +11,10 @@ public class Main {
 
         try (JCraft jCraft = new JCraft(EnvConfig.USERNAME, EnvConfig.PASSWORD, EnvConfig.HOST, EnvConfig.PORT)) {
             jCraft.connect();
+            LOGGER.info("{}", jCraft.listCurrentRemoteDir());
+            jCraft.changeRemoteDir(EnvConfig.REMOTE_DIR);
+            jCraft.listCurrentRemoteDir();
+            jCraft.downloadAllFilesCurrentRemoteDir();
 
         } catch (Exception e) {
             LOGGER.error("{}", e);
