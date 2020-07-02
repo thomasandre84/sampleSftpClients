@@ -44,7 +44,7 @@ class JCraftTest {
     @Order(3)
     void listCurrentRemoteDir() {
         List<String> files = jCraft.listCurrentRemoteDir();
-        assertFalse(files.isEmpty());
+        assertFalse(files.isEmpty()); // really make sure, the folder has a file
         files.forEach(f -> assertFalse(f.startsWith("/")));
     }
 
@@ -52,7 +52,7 @@ class JCraftTest {
     @Order(4)
     void listRemoteDir() {
         List<String> files = jCraft.listRemoteDir(EnvConfig.REMOTE_DIR);
-        assertFalse(files.isEmpty());
+        assertFalse(files.isEmpty()); // really make sure, the folder has a file
         files.forEach(f -> assertTrue(f.startsWith(EnvConfig.REMOTE_DIR)));
     }
 
