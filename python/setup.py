@@ -4,10 +4,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="sftp_samples",  # Replace with your own username
+    name="sftp_client_samples",  # Replace with your own username
     version="0.0.1",
     author="Thomas Andre",
-    author_email="author@example.com",
+    author_email="thomasandre84@gmail.com",
     description="A small example sftp Client with Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
