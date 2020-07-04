@@ -1,21 +1,20 @@
-//use ssh2::Sftp;
+use ssh2::Sftp;
 //use std::io::prelude::*;
 use std::io;
 use std::net::TcpStream;
 //use std::path::Path;
 use ssh2::Session;
 use std::env;
+//use ssh2::DisconnectCode;
 
 pub struct SftpClient {
     sess: Session
-    //tcp: io::Result<TcpStream>
 }
 
 impl SftpClient {
     pub fn new() -> SftpClient {
         SftpClient {
             sess: Session::new().unwrap()
-            //tcp: io::Result
         }
     }
 
@@ -27,6 +26,13 @@ impl SftpClient {
         self.sess.handshake().unwrap();
 
         self.sess.userauth_password(&username, &password).unwrap();
+        assert!(self.sess.authenticated());
+        //self.sftp = self.sess.sftp();
+    }
+
+    pub fn disconnect(&mut self) {
+        self.sess.disconnect(std::option::Option::None, "logout", std::option::Option::None);
+        //std::println!("{}", res.to_string());
         assert!(self.sess.authenticated());
     }
 }
