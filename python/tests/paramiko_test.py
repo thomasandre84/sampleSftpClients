@@ -5,7 +5,7 @@
 """
 import unittest
 import os
-import paramiko_sample
+from sftp_clients import paramiko_sample
 
 
 USER = os.getenv("SFTP_USERNAME")
