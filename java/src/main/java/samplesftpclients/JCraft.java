@@ -4,7 +4,6 @@ import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,16 +13,11 @@ import java.util.Vector;
 /**
  * An example wrapper class for JCraft.
  */
-public final class JCraft implements Closeable {
+public final class JCraft implements SftpClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JCraft.class);
 
     private static final String CHANNEL = "sftp";
-
-    private final String username;
-    private final String password;
-    private final String host;
-    private final int port;
 
     private Session session;
     Channel channel;
@@ -32,23 +26,14 @@ public final class JCraft implements Closeable {
 
     /**
      * Constructor.
-     *
-     * @param username
-     * @param password
-     * @param host
-     * @param port
      */
-    public JCraft(String username,String password,String host, int port) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
-        this.port = port;
+    public JCraft() {
     }
 
     /**
      * Connect to the SFTP Server.
      */
-    public void connect() {
+    public void login(String host, int port, String username, String password) {
         LOGGER.info("Connecting to the SFTP-Server: {}", host);
         jsch = new JSch();
         try {
@@ -192,7 +177,7 @@ public final class JCraft implements Closeable {
         }
     }
 
-    public void disconnect() {
+    public void logout() {
         LOGGER.info("Starting to logout");
         channelSftp.exit();
         channel.disconnect();
@@ -203,6 +188,11 @@ public final class JCraft implements Closeable {
 
     @Override
     public void close() throws IOException {
-        disconnect();
+        logout();
+    }
+
+    @Override
+    public void run() {
+
     }
 }

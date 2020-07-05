@@ -17,18 +17,18 @@ class JCraftTest {
 
     @BeforeAll
     void setUp() {
-        jCraft = new JCraft(EnvConfig.USERNAME, EnvConfig.PASSWORD, EnvConfig.HOST, EnvConfig.PORT);
+        jCraft = new JCraft();
     }
 
     @AfterAll
     void disconnect() throws Exception {
-        jCraft.disconnect();
+        jCraft.logout();
     }
 
     @Test
     @Order(1)
     void connect() {
-        jCraft.connect();
+        jCraft.login(EnvConfig.HOST, EnvConfig.PORT, EnvConfig.USERNAME, EnvConfig.PASSWORD);
         assertTrue(jCraft.channel.isConnected());
         assertTrue(jCraft.channelSftp.isConnected());
     }

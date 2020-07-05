@@ -9,8 +9,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try (JCraft jCraft = new JCraft(EnvConfig.USERNAME, EnvConfig.PASSWORD, EnvConfig.HOST, EnvConfig.PORT)) {
-            jCraft.connect();
+        try (JCraft jCraft = new JCraft()) {
+            jCraft.login(EnvConfig.HOST, EnvConfig.PORT, EnvConfig.USERNAME, EnvConfig.PASSWORD);
             LOGGER.info("{}", jCraft.listCurrentRemoteDir());
             jCraft.changeRemoteDir(EnvConfig.REMOTE_DIR);
             jCraft.listCurrentRemoteDir();

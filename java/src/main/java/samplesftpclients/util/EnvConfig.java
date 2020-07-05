@@ -1,7 +1,7 @@
 package samplesftpclients.util;
 
 /**
- * Just for share. Do not do like this in a real application!
+ * Just for sharing env Variables.
  */
 public class EnvConfig {
 
