@@ -4,12 +4,14 @@
 @description: python paramiko sample SFTP Client
 """
 import paramiko
+import logging
 
 
 class SftpClient:
     '''
     Simple SFTP Client with Python Paramiko
     '''
+    LOGGER = logging.getLogger('paramiko_sample')
 
     def __init__(self):
         self.client = paramiko.SSHClient()
@@ -19,6 +21,7 @@ class SftpClient:
     def connect(self, host, port, user, password, timeout=10.0):
         self.client.connect(host, port, user, password, timeout=timeout)
         self.sftp = self.client.open_sftp()
+        self.LOGGER.info("Logged in")
 
     def logout(self):
         self.client.close()
