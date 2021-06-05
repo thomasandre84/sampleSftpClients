@@ -10,7 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JCraftTest {
+@Tag("integration")
+class JCraftTestIT {
 
     static JCraft jCraft;
 
