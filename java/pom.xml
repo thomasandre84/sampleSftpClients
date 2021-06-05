@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>samplesftpclients</groupId>
-	<artifactId>SFTPClients</artifactId>
+	<artifactId>Java-SFTPClients</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>SFTP Client Library Trials</name>
 
@@ -12,7 +12,7 @@
 		<java.version>11</java.version>
 		<logback.contrib.version>0.1.5</logback.contrib.version>
 		<surefire-plugin.version>2.22.2</surefire-plugin.version>
-		<jacoco.version>0.8.5</jacoco.version>
+		<jacoco.version>0.8.6</jacoco.version>
 		<jackson.databind.version>2.10.4</jackson.databind.version>
 		<slf4j.api.version>1.7.25</slf4j.api.version>
 		<jcraft.version>0.1.55</jcraft.version>
