@@ -3,12 +3,33 @@
  */
 package groovy.sftpClient
 
+import com.jcraft.jsch.*
+
 class App {
-    String getGreeting() {
+    /*String getGreeting() {
         return 'Hello World!'
-    }
+    }*/
 
     static void main(String[] args) {
-        println new App().greeting
+        //println new App().greeting
+
+        Properties config = new Properties()
+        config.put "StrictHostKeyChecking", "no"
+
+        JSch ssh = new JSch()
+        Session sess = ssh.getSession "user", "server.domain.com", 22
+        sess.with {
+            setConfig config
+            setPassword "somecomplicatedpassword"
+            connect()
+            Channel chan = openChannel "sftp"
+            chan.connect()
+
+            ChannelSftp sftp = (ChannelSftp) chan;
+            def sessionsFile = new File('c:/important_document.doc')
+            sessionsFile.withInputStream { istream -> sftp.put(istream, "/home/brippe/Documents/important_document.doc") }
+            chan.disconnect()
+            disconnect()
+        }
     }
 }
