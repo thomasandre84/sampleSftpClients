@@ -13,9 +13,9 @@ class SftpClient:
     '''
     LOGGER = logging.getLogger('paramiko_sample')
 
-    def __init__(self):
+    def __init__(self, host_key_policy=paramiko.AutoAddPolicy):
         self.client = paramiko.SSHClient()
-        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+        self.client.set_missing_host_key_policy(host_key_policy)
         self.sftp = None
 
     def connect(self, host, port, user, password, timeout=10.0):
