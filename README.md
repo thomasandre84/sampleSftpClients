@@ -3,7 +3,7 @@ Some sample SFTP Client Library usage examples
 
 ## Java Sftp Clients
 ### Requirements
-* JAVA JDK 11+
+* JAVA JDK 15+
 * Maven
 
 ### Run the tests 
