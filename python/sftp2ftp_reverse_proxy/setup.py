@@ -1,14 +1,14 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("../README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="sftp_client_samples",  # Replace with your own username
+    name="sftp2ftp",  # Replace with your own username
     version="0.0.1",
     author="Thomas Andre",
     author_email="thomasandre84@gmail.com",
-    description="A small example sftp Client with Python",
+    description="An example sftp to ftp reverse proxy based on paramiko",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
@@ -19,6 +19,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    setup_requires=['pytest-runner', 'paramiko'],
+    setup_requires=['pytest-runner', 'paramiko', 'rx'],
     tests_require=['pytest'],
 )
