@@ -30,7 +30,6 @@ class ClientConnection(threading.Thread):
         self.ftp = ftp
 
     def run(self):
-
         try:
             ftp = FTP(self.ftp, timeout=30)
         except:
@@ -106,8 +105,6 @@ def start_server(host, ftp, port, keyfile, level):
                        "Connection Exception: {}:{}".format(addr[0], addr[1]))
 
 
-
-
 def main():
     usage = """\
     usage: sftpfd [options]
@@ -119,7 +116,7 @@ def main():
         help='listen on HOST [default: %default]')
     parser.add_option(
         '--ftp-server', dest='ftp', default="localhost",
-        help='ftp frontdoor to connect to [default: %default]')
+        help='ftp server to connect to [default: %default]')
     parser.add_option(
         '-p', '--port', dest='port', type='int', default=PORT,
         help='listen on PORT [default: %default]'
@@ -129,36 +126,17 @@ def main():
         help='Debug level: WARNING, INFO, DEBUG [default: %default]'
     )
     parser.add_option(
-        '-f', '--logfile', dest='logfile', default='./sftp2ftp.log',
-        help='Set the logfile [default: %default]'
-    )
-    parser.add_option(
-        '-s', '--logfilesize', type='int', dest='logfilesize', default=1024*1024*100,
-        help='Set the logfilesize in bytes [default: %default]')
-    parser.add_option(
         '-k', '--keyfile', dest='keyfile', metavar='FILE',
         help='Path to private key, for example /tmp/test_rsa.key'
     )
-    """
-    parser.add_option(
-        '--pid-file', dest='pidfile', metavar='FILE', default=os.getcwd()+'/sftp2ftp.run',
-        help='PID file [default: %default]'
-    )
-    """
+
     options, _args = parser.parse_args()
 
     if options.keyfile is None:
         parser.print_help()
         sys.exit(-1)
-    """
-    if os.path.isfile(options.pidfile):
-        print("{} already exists! Removing file".format(options.pidfile))
-        os.unlink(options.pidfile)
-    with open(options.pidfile, 'w') as f:
-        f.write(str(os.getpid()))
-    """
+
     start_server(options.host, options.ftp, options.port, options.keyfile, options.level)
-                 #options.logfile, options.logfilesize)
 
 
 if __name__ == '__main__':
