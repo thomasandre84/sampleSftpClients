@@ -13,9 +13,18 @@ from .sftp2ftp import MySFTPServer, MySSHServer
 HOST, PORT = 'localhost', 1234
 
 
-async def start_server(host, port, ftp, keyfile, loglevel):
+def handle_client(process):
+    process.stdout.write('Welcome to my SSH server, %s!\n' %
+                         process.get_extra_info('username'))
+    process.exit(0)
+
+
+async def start_server(host, port, ftp_host, keyfile, loglevel):
     await asyncssh.listen(host, port, server_host_keys=[keyfile],
-                          sftp_factory=MySFTPServer)
+                          server_factory=MySSHServer,
+                          keepalive_interval=30,
+                          sftp_factory=MySFTPServer,
+                          process_factory=handle_client)
 
 
 def main():

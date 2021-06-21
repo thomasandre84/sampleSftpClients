@@ -7,9 +7,9 @@ from ftplib import FTP
 
 class MySSHServer(asyncssh.SSHServer):
 
-    def __init__(self, ftp_host):
+    def __init__(self, **kwargs):
         asyncssh.SSHServer.__init__(self)
-        self.ftp = FTP(ftp_host, timeout=30)
+        print("KW_Args: {}".format(kwargs))
 
     def connection_made(self, conn):
         print('SSH connection received from %s.' %
@@ -20,6 +20,7 @@ class MySSHServer(asyncssh.SSHServer):
 
     def validate_password(self, username, password):
         print("Username {} with password: {}".format(username, password))
+        #print("Having ftp Connection to {}".format(self.ftp.host))
         return True
 
 
