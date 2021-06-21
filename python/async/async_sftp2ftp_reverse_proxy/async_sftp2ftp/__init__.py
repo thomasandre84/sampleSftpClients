@@ -8,7 +8,7 @@ import sys
 import textwrap
 import asyncio
 import asyncssh
-from .sftp2ftp import MySFTPServer
+from .sftp2ftp import MySFTPServer, MySSHServer
 
 HOST, PORT = 'localhost', 1234
 
@@ -16,6 +16,7 @@ HOST, PORT = 'localhost', 1234
 async def start_server(host, port, ftp, keyfile, loglevel):
     await asyncssh.listen(host, port, server_host_keys=[keyfile],
                           sftp_factory=MySFTPServer)
+
 
 def main():
     usage = """\
