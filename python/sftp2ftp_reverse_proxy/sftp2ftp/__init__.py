@@ -10,37 +10,24 @@ import socket
 import optparse
 import sys
 import textwrap
-#import pdb
+# import pdb
 import threading
-#import multiprocessing
-import os
 import paramiko
 from paramiko.ssh_exception import SSHException
 from .sftp2ftp import ServerImpl, SFTPServerImpl, LOGGER
 from ftplib import FTP
-
-import asyncio
-import rx
-import rx.operators as ops
-from rx.subject import Subject
-from rx.scheduler.eventloop import AsyncIOScheduler
-
-import logging
-import logging.handlers
 
 HOST, PORT = 'localhost', 1234
 BACKLOG = 10
 
 
 class ClientConnection(threading.Thread):
-    def __init__(self, ftp, conn, addr, keyfile, level):
+    def __init__(self, ftp, conn, addr, keyfile):
         threading.Thread.__init__(self)
         self.conn = conn
         self.addr = addr
         self.keyfile = keyfile
-        self.level = level
         self.ftp = ftp
-        #self.timeout = 900
 
     def run(self):
 
@@ -52,7 +39,6 @@ class ClientConnection(threading.Thread):
             return
         try:
             host_key = paramiko.RSAKey.from_private_key_file(self.keyfile)
-            #self.conn.settimeout(30) #has no effect
             transport = paramiko.Transport(self.conn)
 
         except:
@@ -75,7 +61,6 @@ class ClientConnection(threading.Thread):
         try:
             _channel = transport.accept()
             LOGGER.log(paramiko.common.INFO, "accept client connection: {}:{}".format(self.addr[0], self.addr[1]))
-            #transport.set_keepalive(30)
             transport.join()
             while transport.is_active():# and timer < self.timeout:
                 #timer += 1
@@ -88,12 +73,9 @@ class ClientConnection(threading.Thread):
             LOGGER.log(paramiko.common.INFO,
                        "Send FTP Quit Command: {}:{}".format(self.addr[0], self.addr[1]))
             try:
-                #print(ftp.sendcmd("QUIT"))
                 ftp.sendcmd("QUIT")
-                # Might fix open ftp-connections problem VSMDDC-42
                 LOGGER.log(paramiko.common.INFO,
                            "Send FTP Close Command: {}:{}".format(self.addr[0], self.addr[1]))
-                #print(ftp.close())
                 ftp.close()
                 LOGGER.log(paramiko.common.INFO,
                            "disconnecting client: {}:{}".format(self.addr[0], self.addr[1]))
@@ -104,26 +86,20 @@ class ClientConnection(threading.Thread):
                 LOGGER.log(paramiko.common.INFO, "FTP connection could not be closed")
 
 
-def start_server(host, ftp, port, keyfile, level, logfile, logfilesize):
+def start_server(host, ftp, port, keyfile, level):
     paramiko_level = getattr(paramiko.common, level)
     paramiko.common.logging.basicConfig(level=paramiko_level)
-    #logtofile(logfile, logfilesize, level=paramiko_level)
-    #logger = logging.getLogger("paramiko")
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
     server_socket.bind((host, port))
     server_socket.listen(BACKLOG)
 
-    # does not work for several parallel connections, only the newest/last one
-    #server_socket.settimeout(30)
-
     while True:
         try:
             conn, addr = server_socket.accept()
-            t = ClientConnection(ftp, conn, addr, keyfile, level)
+            t = ClientConnection(ftp, conn, addr, keyfile)
             t.start()
-            #t.join()
         except:
             conn.close()
             LOGGER.log(paramiko.common.WARNING,
@@ -181,8 +157,8 @@ def main():
     with open(options.pidfile, 'w') as f:
         f.write(str(os.getpid()))
     """
-    start_server(options.host, options.ftp, options.port, options.keyfile, options.level,
-                 options.logfile, options.logfilesize)
+    start_server(options.host, options.ftp, options.port, options.keyfile, options.level)
+                 #options.logfile, options.logfilesize)
 
 
 if __name__ == '__main__':

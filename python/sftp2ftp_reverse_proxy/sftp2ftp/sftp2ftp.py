@@ -3,7 +3,6 @@
 """
 @description: the mapper classes
 """
-# import stat
 import os
 import paramiko
 from paramiko import ServerInterface, SFTPServerInterface, SFTPServer, SFTPAttributes, \
@@ -295,7 +294,7 @@ class SFTPServerImpl(SFTPServerInterface):
 
     def open(self, path, flags, attr):
         LOGGER.log(INFO, "SFTPServer.open({})".format(path))
-        # Problem with Axway - split path and file - chdir path via ftp and upload file via ftp
+        # Problem with sftp clients which cannot send realpath signal
         fobj = SFTPHandleImpl(flags)
         fobj.set_ftp(self._ftp)
         fobj.filename = path
