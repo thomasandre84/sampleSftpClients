@@ -13,7 +13,7 @@
 		<logback.contrib.version>0.1.5</logback.contrib.version>
 		<surefire-plugin.version>2.22.2</surefire-plugin.version>
 		<jacoco.version>0.8.5</jacoco.version>
-		<jackson.databind.version>2.10.5.1</jackson.databind.version>
+		<jackson.databind.version>2.13.4.1</jackson.databind.version>
 		<slf4j.api.version>1.7.25</slf4j.api.version>
 		<jcraft.version>0.1.55</jcraft.version>
 		<logback.version>1.2.3</logback.version>
