@@ -17,7 +17,7 @@ class JCraftTest {
 
     @BeforeAll
     void setUp() {
-        jCraft = new JCraft(EnvConfig.USERNAME, EnvConfig.PASSWORD, EnvConfig.HOST, EnvConfig.PORT);
+        jCraft = JCraft.passwordLogin(EnvConfig.USERNAME, EnvConfig.PASSWORD, EnvConfig.HOST, EnvConfig.PORT);
     }
 
     @AfterAll
@@ -29,7 +29,6 @@ class JCraftTest {
     @Order(1)
     void connect() {
         jCraft.connect();
-        assertTrue(jCraft.channel.isConnected());
         assertTrue(jCraft.channelSftp.isConnected());
     }
 

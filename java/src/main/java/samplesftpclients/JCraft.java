@@ -3,9 +3,13 @@ package samplesftpclients;
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import samplesftpclients.util.EnvConfig;
+import samplesftpclients.util.IdentityKey;
+import samplesftpclients.util.LocalFilesUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -20,29 +24,36 @@ public final class JCraft implements Closeable {
 
     private static final String CHANNEL = "sftp";
 
-    private final String username;
-    private final String password;
-    private final String host;
-    private final int port;
+    private String username;
+    private String password;
+    private byte[] privateKey;
+    private String host;
+    private int port;
 
     private Session session;
-    Channel channel;
     ChannelSftp channelSftp;
     private JSch jsch;
 
-    /**
-     * Constructor.
-     *
-     * @param username
-     * @param password
-     * @param host
-     * @param port
-     */
-    public JCraft(String username,String password,String host, int port) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
-        this.port = port;
+    private JCraft (){};
+
+    public static JCraft passwordLogin(String username,String password,String host, int port) {
+        JCraft jCraft = new JCraft();
+        jCraft.username = username;
+        jCraft.password = password;
+        jCraft.host = host;
+        jCraft.port = port;
+
+        return jCraft;
+    }
+
+    public static JCraft keyLogin(String username, byte[] privateKey, String host, int port) {
+        JCraft jCraft = new JCraft();
+        jCraft.username = username;
+        jCraft.privateKey = privateKey;
+        jCraft.host=host;
+        jCraft.port=port;
+
+        return jCraft;
     }
 
     /**
@@ -51,19 +62,29 @@ public final class JCraft implements Closeable {
     public void connect() {
         LOGGER.info("Connecting to the SFTP-Server: {}", host);
         jsch = new JSch();
+
         try {
-            session = jsch.getSession(username, host, port);
-            session.setPassword(password);
             Properties config = new Properties();
-            config.put("StrictHostKeyChecking", "no");
+            //config.put("StrictHostKeyChecking", "no");
+            jsch.setKnownHosts(LocalFilesUtil.convertByteArrayToInputStream(LocalFilesUtil.getContentFromFile(Path.of(EnvConfig.KNOWN_HOSTS_PATH))));
+            if (privateKey != null) {
+                Identity identity = createIndentity(jsch, this.privateKey);
+                jsch.addIdentity(identity, null);
+                config.put("PreferredAuthentications", "publickey");
+            }
+            session = jsch.getSession(username, host, port);
+            if (password != null) session.setPassword(password);
+
             session.setConfig(config);
             session.connect();
-            channel = session.openChannel(CHANNEL);
-            channel.connect();
-            channelSftp = (ChannelSftp) channel;
+            channelSftp = (ChannelSftp) session.openChannel(CHANNEL);
+            channelSftp.connect();
             LOGGER.info("Successfully logged in");
         } catch (JSchException e) {
             LOGGER.error("Cannot Login: {}", e);
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -195,9 +216,13 @@ public final class JCraft implements Closeable {
     public void disconnect() {
         LOGGER.info("Starting to logout");
         channelSftp.exit();
-        channel.disconnect();
         session.disconnect();
         LOGGER.info("Logout done");
+    }
+
+    private static Identity createIndentity(JSch jsch, byte[] privateKey) throws JSchException {
+        KeyPair keyPair = KeyPair.load(jsch, privateKey, null);
+        return IdentityKey.createIdentity(jsch, keyPair, "example");
     }
 
 

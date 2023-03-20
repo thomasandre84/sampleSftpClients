@@ -3,11 +3,14 @@ package samplesftpclients.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,5 +55,14 @@ public class LocalFilesUtil {
             fileNames.add(tmp[tmp.length-1]);
         }
         return fileNames;
+    }
+
+    public static byte[] getContentFromFile(Path filePath) throws IOException {
+        LOGGER.info("Getting content from File: '{}'", filePath);
+        return Files.readAllBytes(filePath);
+    }
+
+    public static InputStream convertByteArrayToInputStream(byte[] content) {
+        return new ByteArrayInputStream(content);
     }
 }
