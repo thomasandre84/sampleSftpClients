@@ -34,10 +34,16 @@
 			<version>${jcraft.version}</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-sftp</artifactId>
+			<version>2.9.2</version>
 		</dependency>
 
 		<!-- ch.qos.logback.contrib.jackson.JacksonJsonFormatter -->

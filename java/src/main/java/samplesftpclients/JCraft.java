@@ -18,17 +18,11 @@ import java.util.Vector;
 /**
  * An example wrapper class for JCraft.
  */
-public final class JCraft implements Closeable {
+public final class JCraft extends AbstractSftpClient implements Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JCraft.class);
 
     private static final String CHANNEL = "sftp";
-
-    private String username;
-    private String password;
-    private byte[] privateKey;
-    private String host;
-    private int port;
 
     private Session session;
     ChannelSftp channelSftp;
