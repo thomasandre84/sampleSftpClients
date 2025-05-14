@@ -13,38 +13,33 @@
 		<logback.contrib.version>0.1.5</logback.contrib.version>
 		<surefire-plugin.version>2.22.2</surefire-plugin.version>
 		<jacoco.version>0.8.5</jacoco.version>
-		<jackson.databind.version>2.12.7.1</jackson.databind.version>
+		<jackson.databind.version>2.18.2</jackson.databind.version>
 		<slf4j.api.version>1.7.25</slf4j.api.version>
 		<jcraft.version>0.1.55</jcraft.version>
-		<logback.version>1.2.3</logback.version>
+		<logback.version>1.5.13</logback.version>
 		<junit.version>5.6.2</junit.version>
 		<maven.compiler.version>3.8.1</maven.compiler.version>
 	</properties>
 
 	<dependencies>
-		<!--<dependency>
-			<groupId>com.sshtools</groupId>
-			<artifactId>j2ssh-maverick</artifactId>
-			<version>1.5.5</version>
-		</dependency> -->
 
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>${jcraft.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.sshd</groupId>
+			<artifactId>sshd-sftp</artifactId>
+			<version>2.14.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.sshd</groupId>
-			<artifactId>sshd-sftp</artifactId>
-			<version>2.9.2</version>
-		</dependency>
+
 
 		<!-- ch.qos.logback.contrib.jackson.JacksonJsonFormatter -->
 		<dependency>

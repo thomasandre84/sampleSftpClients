@@ -18,7 +18,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.SocketAddress;
-import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -26,6 +25,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
+/**
+ *
+ */
 public class KnowHostsKeyVerifier implements ServerKeyVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(KnowHostsKeyVerifier.class);
     public static final String STRICT_CHECKING_OPTION = "StrictHostKeyChecking";

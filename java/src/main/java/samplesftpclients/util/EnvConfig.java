@@ -9,7 +9,7 @@ public class EnvConfig {
 
     private EnvConfig(){}
 
-    public static String USERNAME = Optional.ofNullable(System.getenv("SFTP_USERNAME")).orElse("user");
+    public static String USERNAME = Optional.ofNullable(System.getenv("SFTP_USERNAME")).orElse(System.getenv("USER"));
     public static String PASSWORD = System.getenv("SFTP_PASSWORD");
     public static String HOST = Optional.ofNullable(System.getenv("SFTP_HOST")).orElse("localhost");
     public static Integer PORT = Integer.parseInt(Optional.ofNullable(System.getenv("SFTP_PORT")).orElse("22"));
